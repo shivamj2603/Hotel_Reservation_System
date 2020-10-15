@@ -2,11 +2,13 @@ package com.shivam.hotelreservationsystem;
 
 public class Hotel {
 	private String hotelName;
-	public int rate;
+	public int weekDayRate;
+	public int weekEndRate;
 	public String customerType;
-	public Hotel(String hotelName, int rate, String customerType) {
+	public Hotel(String hotelName, int weekDayRate, int weekEndRate, String customerType) {
 		this.hotelName = hotelName;
-		this.rate = rate;
+		this.weekDayRate = weekDayRate;
+		this.weekEndRate = weekEndRate;
 		this.customerType = customerType;
 	}
 	public String getHotelName() {
@@ -21,15 +23,21 @@ public class Hotel {
 	public void setCustomerType(String customerType) {
 		this.customerType = customerType;
 	}
-	public int getRate() {
-		return rate;
+	public int getWeekDayRate() {
+		return weekDayRate;
 	}	
-	public void setRate(int rate) {
-		this.rate = rate;
+	public void setWeekDayRate(int weekDayRate) {
+		this.weekDayRate = weekDayRate;
+	}
+	public int getWeekEndRate() {
+		return weekEndRate;
+	}
+	public void setWeekEndRate(int weekEndRate) {
+		this.weekEndRate = weekEndRate;
 	}
 	@Override
 	public String toString() {
-		String hotel = "Hotel : " + this.getHotelName() + "\n" + "Customer Type : " +this.getCustomerType() + "\n" + "Rate : " +this.getRate() + "$\n";
+		String hotel = "Hotel : " + this.getHotelName() + "\n" + "Customer Type : " +this.getCustomerType() + "\n" + "WeekDayRate : " +this.getWeekDayRate() + "$\n" + "WeekEndRate : " + this.getWeekEndRate() + "\n";
 		return hotel;
 	}
 }
