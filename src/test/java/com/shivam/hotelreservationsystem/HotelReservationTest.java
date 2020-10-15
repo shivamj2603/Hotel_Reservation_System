@@ -56,5 +56,17 @@ class HotelReservationTest {
 		HotelReservation reservation = new HotelReservation();
 		boolean result = reservation.addHotel(input);
 		assertTrue(result);
-	}	
+	}
+	@Test	
+	public void whenCalled_findCheapestHotelFunction_withGivenRating_shouldReturnCheapestHotel() {
+		Scanner input = new Scanner(System.in);
+		HotelReservation reservation = new HotelReservation();
+		reservation.addHotel(input);
+		reservation.addHotel(input);
+		reservation.addHotel(input);
+		Hotel hotel = new Hotel("LakeWood", 110, 90, 4, "Regular");
+		ArrayList<Hotel> hotelList = new ArrayList<Hotel>();
+		hotelList.add(hotel);
+		assertEquals(hotelList, reservation.findCheapestHotel(input));
+	}
 }

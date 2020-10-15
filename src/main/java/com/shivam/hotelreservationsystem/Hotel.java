@@ -45,7 +45,8 @@ public class Hotel {
 	}
 	@Override
 	public String toString() {
-		String hotel = "Hotel : " + this.getHotelName() + "\n" + "Customer Type : " +this.getCustomerType() + "\n" + "WeekDayRate : " +this.getWeekDayRate() + "$\n" + "WeekEndRate : " + this.getWeekEndRate() + "\n";
+		String hotel = "Hotel : " + this.getHotelName() + "\n" + "Customer Type : " +this.getCustomerType() + "\n" + "WeekDayRate : " +
+	                   this.getWeekDayRate() + "$\n" + "WeekEndRate : " + this.getWeekEndRate() + "Hotel Ratings: " + this.getHotelRatings() + "\n";
 		return hotel;
 	}
 }

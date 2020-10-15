@@ -72,21 +72,29 @@ public class HotelReservation {
 		return cheapestHotels;
 	}
 	public ArrayList<Hotel> findCheapest(long totalWeekDays, long totalWeekEndDays) {
-		int minimum = 0;
+		int minimumRate = 0;
 		ArrayList<Hotel> cheapestHotels = new ArrayList<Hotel>();
 		HashMap<Hotel,Integer> hotelMap = new HashMap<Hotel,Integer>();
+		HashMap<Hotel,Integer> ratingMap = new HashMap<Hotel,Integer>();
 		for(Hotel hotel : hotelList) {
 			int totalRate = hotel.getWeekDayRate() * (int)totalWeekDays + hotel.getWeekEndRate() * (int)totalWeekEndDays;
 			hotelMap.put(hotel, totalRate);
+			ratingMap.put(hotel, hotel.getHotelRatings());
 		}
-		minimum = Collections.min(hotelMap.values());
+		minimumRate = Collections.min(hotelMap.values());
+		
 		for(Map.Entry<Hotel, Integer> entry : hotelMap.entrySet()) {
-			if(entry.getValue() == minimum) {
+			if(entry.getValue() == minimumRate) {
 				cheapestHotels.add(entry.getKey());
 			}
 		}
+		int maximumRating = Collections.max(ratingMap.values());
 		for(Hotel hotel : cheapestHotels) {
-			System.out.println(hotel.getHotelName() + " Total Rate : " + minimum);
+			if(hotel.getHotelRatings() != maximumRating) {
+				cheapestHotels.remove(hotel);
+				continue;
+			}
+			System.out.println(hotel.getHotelName() + "Ratings : " + hotel.getHotelRatings() +" Total Rate : " + minimumRate);
 		}
 		return cheapestHotels;
 	}
