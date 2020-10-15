@@ -49,4 +49,10 @@ public class Hotel {
 	                   this.getWeekDayRate() + "$\n" + "WeekEndRate : " + this.getWeekEndRate() + "Hotel Ratings: " + this.getHotelRatings() + "\n";
 		return hotel;
 	}
+	public boolean equals(Hotel O) {
+		if(this.getHotelName().equals(O.getHotelName())) {
+			return true;
+		}
+		return false;
+	}
 }

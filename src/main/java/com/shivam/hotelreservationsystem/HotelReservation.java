@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import java.util.Scanner;
 
 public class HotelReservation {
+	static long totalDays,totalWeekDays,totalWeekEndDays;
 	public ArrayList<Hotel> hotelList = new ArrayList<Hotel>();
 	/**
 	 * Usecase 1
@@ -42,13 +43,7 @@ public class HotelReservation {
 	public void setHotelList(ArrayList<Hotel> hotelList) {
 		this.hotelList = hotelList;
 	}
-	/**
-	 * Usecase 4
-	 * Modification of the function to take into account different rates for weekend and weekdays
-	 * @param input
-	 * @return
-	 */
-	public ArrayList<Hotel> findCheapestHotel(Scanner input) {
+	public void getInput(Scanner input) {
 		LocalDate[] localDate = new LocalDate[2];
 		String inputDate = "";
 		inputDate = input.nextLine();
@@ -59,19 +54,36 @@ public class HotelReservation {
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMMyyyy", Locale.ENGLISH);
 			LocalDate date = LocalDate.parse(dates[iteration], formatter);
 			localDate[iteration] = date;
-		}	
-		//start date
+		}
 		LocalDate start = localDate[0];
-		//end date
 		LocalDate end = localDate[1];
-		long totalDays = ChronoUnit.DAYS.between(start, end);
+		totalDays = ChronoUnit.DAYS.between(start, end);
 		totalDays = totalDays + 1;
-		long totalWeekEndDays = getTotalWeekEndDays(start, end);
-		long totalWeekDays = totalDays - totalWeekEndDays;
-		ArrayList<Hotel> cheapestHotels = this.findCheapest(totalWeekDays, totalWeekEndDays);
+		totalWeekEndDays = getTotalWeekEndDays(start, end); 
+		totalWeekDays = totalDays - totalWeekEndDays;
+	}
+	public int getTotalWeekEndDays(LocalDate start, LocalDate end) {
+		long weekEndDays = 0;
+		LocalDate next = start.minusDays(1);
+		//iterate from start date to end date
+		while ((next = next.plusDays(1)).isBefore(end.plusDays(1))) {
+			if(next.getDayOfWeek().toString().equals("SATURDAY") || next.getDayOfWeek().toString().equals("SUNDAY")) {
+				totalWeekEndDays++;
+			}
+		}
+		return (int)totalWeekEndDays;	
+	}
+	/**
+	 * Usecase 4
+	 * Modification of the function to take into account different rates for weekend and weekdays
+	 * @param input
+	 * @return
+	 */
+	public ArrayList<Hotel> findCheapestHotel(Scanner input) {
+		ArrayList<Hotel> cheapestHotels = this.findCheapest();
 		return cheapestHotels;
 	}
-	public ArrayList<Hotel> findCheapest(long totalWeekDays, long totalWeekEndDays) {
+	public ArrayList<Hotel> findCheapest() {
 		int minimumRate = 0;
 		ArrayList<Hotel> cheapestHotels = new ArrayList<Hotel>();
 		HashMap<Hotel,Integer> hotelMap = new HashMap<Hotel,Integer>();
@@ -98,16 +110,29 @@ public class HotelReservation {
 		}
 		return cheapestHotels;
 	}
-	public long getTotalWeekEndDays(LocalDate start, LocalDate end) {
-		long totalWeekEndDays = 0;
-		LocalDate next = start.minusDays(1);
-		//iterate from start date to end date
-		while ((next = next.plusDays(1)).isBefore(end.plusDays(1))) {
-			if(next.getDayOfWeek().toString().equals("SATURDAY") || next.getDayOfWeek().toString().equals("SUNDAY")) {
-				totalWeekEndDays++;
+	/**
+	 *UseCase 7
+	 *Function to find Best Rated Hotels
+	 * @return
+	 */
+	public ArrayList<Hotel> findBestRatedHotels(Scanner input){
+		getInput(input);
+		ArrayList<Hotel> bestRatedHotels = new ArrayList<Hotel>();
+		HashMap<Hotel,Integer> ratingMap = new HashMap<Hotel,Integer>();
+		for(Hotel hotel : hotelList) {
+			ratingMap.put(hotel, hotel.getHotelRatings());
+		}
+		int maximumRating = Collections.max(ratingMap.values());
+		for(Map.Entry<Hotel, Integer> entry : ratingMap.entrySet()) {
+			if(entry.getValue() == maximumRating) {
+				bestRatedHotels.add(entry.getKey());
+				System.out.println("Hotel Name : " +entry.getKey().getHotelName() + "Ratings : " + entry.getKey().getHotelRatings() +" Total Rate : " + ((int) totalWeekDays * entry.getKey().getWeekDayRate() + (int)totalWeekEndDays * entry.getKey().getWeekEndRate()));
 			}
 		}
-		return totalWeekEndDays;	
+		for(Hotel hotel : bestRatedHotels) {
+			System.out.println(hotel);
+		}
+		return bestRatedHotels;	
 	}
 	public static void main(String[] args) {
 		Scanner input = new Scanner(System.in);
