@@ -4,11 +4,13 @@ public class Hotel {
 	private String hotelName;
 	public int weekDayRate;
 	public int weekEndRate;
+	public int hotelRatings;
 	public String customerType;
-	public Hotel(String hotelName, int weekDayRate, int weekEndRate, String customerType) {
+	public Hotel(String hotelName, int weekDayRate, int weekEndRate, int hotelRatings, String customerType) {
 		this.hotelName = hotelName;
 		this.weekDayRate = weekDayRate;
 		this.weekEndRate = weekEndRate;
+		this.hotelRatings = hotelRatings;
 		this.customerType = customerType;
 	}
 	public String getHotelName() {
@@ -34,6 +36,12 @@ public class Hotel {
 	}
 	public void setWeekEndRate(int weekEndRate) {
 		this.weekEndRate = weekEndRate;
+	}
+	public int getHotelRatings() {
+		return hotelRatings;
+	}
+	public void setHotelRatings(int hotelRatings) {
+		this.hotelRatings = hotelRatings;
 	}
 	@Override
 	public String toString() {
