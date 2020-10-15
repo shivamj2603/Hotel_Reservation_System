@@ -61,9 +61,9 @@ public class HotelReservation {
 			localDate[iteration] = date;
 		}	
 		//start date
-	    LocalDate start = localDate[0];
-	    //end date
-	    LocalDate end = localDate[1];
+		LocalDate start = localDate[0];
+		//end date
+		LocalDate end = localDate[1];
 		long totalDays = ChronoUnit.DAYS.between(start, end);
 		totalDays = totalDays + 1;
 		long totalWeekEndDays = getTotalWeekEndDays(start, end);
@@ -79,16 +79,16 @@ public class HotelReservation {
 			int totalRate = hotel.getWeekDayRate() * (int)totalWeekDays + hotel.getWeekEndRate() * (int)totalWeekEndDays;
 			hotelMap.put(hotel, totalRate);
 		}
-	    minimum = Collections.min(hotelMap.values());
-	    for(Map.Entry<Hotel, Integer> entry : hotelMap.entrySet()) {
-	    	if(entry.getValue() == minimum) {
-	    		cheapestHotels.add(entry.getKey());
-	    	}
-	    }
-	    for(Hotel hotel : cheapestHotels) {
-	    System.out.println(hotel.getHotelName() + " Total Rate : " + minimum);
-	    }
-	    return cheapestHotels;
+		minimum = Collections.min(hotelMap.values());
+		for(Map.Entry<Hotel, Integer> entry : hotelMap.entrySet()) {
+			if(entry.getValue() == minimum) {
+				cheapestHotels.add(entry.getKey());
+			}
+		}
+		for(Hotel hotel : cheapestHotels) {
+			System.out.println(hotel.getHotelName() + " Total Rate : " + minimum);
+		}
+		return cheapestHotels;
 	}
 	public long getTotalWeekEndDays(LocalDate start, LocalDate end) {
 		long totalWeekEndDays = 0;

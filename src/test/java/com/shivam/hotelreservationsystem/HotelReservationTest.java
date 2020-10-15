@@ -29,7 +29,7 @@ class HotelReservationTest {
 		reservation.addHotel(input);
 		reservation.addHotel(input);
 		reservation.addHotel(input);
-		Hotel hotel = new Hotel("LakeWood", 110, 90,"Regular");
+		Hotel hotel = new Hotel("LakeWood", 110, 90, 4, "Regular");
 		ArrayList<Hotel> hotelList = new ArrayList<Hotel>();
 		hotelList.add(hotel);
 		assertEquals(hotelList, reservation.findCheapestHotel(input));
@@ -47,6 +47,14 @@ class HotelReservationTest {
 		reservation.addHotel(input);
 		assertEquals(3, reservation.hotelList.size());
 	}
-	
-	
+	/**
+	 * TestCase 5
+	 */
+	@Test
+	public void whenHotelAdded_toReservationSystem_withRatings_shouldReturnTrue() {
+		Scanner input = new Scanner(System.in);
+		HotelReservation reservation = new HotelReservation();
+		boolean result = reservation.addHotel(input);
+		assertTrue(result);
+	}	
 }
