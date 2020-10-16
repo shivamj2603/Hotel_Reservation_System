@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.Scanner;
+import java.time.DateTimeException;
 
 public class HotelReservation {
 	static long totalDays,totalWeekDays,totalWeekEndDays;
@@ -17,17 +18,27 @@ public class HotelReservation {
 	 * @return
 	 */
 	public void addHotel(Scanner input) {
-		getInput(input);
-		Hotel hotel1,hotel2,hotel3;
-		if(customerType.equals("Regular")) {
-			hotel1 = new Hotel("LakeWood", 110, 90, 4, "Regular");
-			hotel2 = new Hotel("BridgeWood", 150, 50, 3, "Regular");
-			hotel3 = new Hotel("RidgeWood" , 220, 150, 5, "Regular");
+		Hotel hotel1 = null;
+		Hotel hotel2 = null;
+		Hotel hotel3 = null;
+		try {
+			getInput(input);
+			if(customerType.equals("Regular")) {
+				hotel1 = new Hotel("LakeWood", 110, 90, 4, "Regular");
+				hotel2 = new Hotel("BridgeWood", 150, 50, 3, "Regular");
+				hotel3 = new Hotel("RidgeWood" , 220, 150, 5, "Regular");
+			}
+			else if(customerType.equals("Reward")){
+				hotel1 = new Hotel("LakeWood", 80, 80, 4, "Reward");
+				hotel2 = new Hotel("BridgeWood", 110, 50, 3, "Reward");
+				hotel3 = new Hotel("RidgeWood" , 100, 40, 5, "Reward");
+			}
+			else {
+				throw new InvalidEntryException("Invalid Customer Type");
+			}
 		}
-		else {
-			hotel1 = new Hotel("LakeWood", 80, 80, 4, "Reward");
-			hotel2 = new Hotel("BridgeWood", 110, 50, 3, "Reward");
-			hotel3 = new Hotel("RidgeWood" , 100, 40, 5, "Reward");
+		catch(InvalidEntryException exception) {
+			System.out.println(exception);
 		}
 		hotelList.add(hotel1);
 		hotelList.add(hotel2);
@@ -55,9 +66,15 @@ public class HotelReservation {
 		customerType = dates[0];
 		for(int iteration = 1; iteration<=2 ; iteration++) {
 			//Convert dates to standard format
+			try {
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMMyyyy", Locale.ENGLISH);
 			LocalDate date = LocalDate.parse(dates[iteration], formatter);
 			localDate[iteration-1] = date;
+			}
+			catch(DateTimeException exception) {
+				System.out.println("Invalid Date Entry");
+				getInput(input);
+			}
 		}
 		LocalDate start = localDate[0];
 		LocalDate end = localDate[1];
