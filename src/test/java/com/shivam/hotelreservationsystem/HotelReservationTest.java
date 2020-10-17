@@ -101,4 +101,14 @@ class HotelReservationTest {
 		reservation.addHotel(input);
 		assertEquals("RidgeWood", reservation.findCheapestBestRatedHotels().get(0).getHotelName());
 	}
+	/**
+	 * TestCase 12
+	 */
+	@Test
+	public void whenCalled_findCheapestBestRatedHotel_forRegularCustomer_shouldReturnLakeWood() {
+		Scanner input = new Scanner(System.in);
+		HotelReservation reservation = new HotelReservation();
+		reservation.addHotel(input);
+		assertEquals("LakeWood", reservation.findCheapestBestRatedHotels().get(0).getHotelName());
+	}
 }
