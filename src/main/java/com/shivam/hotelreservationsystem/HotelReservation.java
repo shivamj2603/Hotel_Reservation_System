@@ -4,6 +4,7 @@ import java.time.temporal.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 import java.util.Scanner;
 import java.time.DateTimeException;
 
@@ -60,16 +61,13 @@ public class HotelReservation {
 		inputDate = input.nextLine();
 		//Split the string to get the dates
 		String[] dates = inputDate.split(":|,");
-		for(String date : dates) {
-		System.out.println(date);
-		}
 		customerType = dates[0];
 		for(int iteration = 1; iteration<=2 ; iteration++) {
 			//Convert dates to standard format
 			try {
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMMyyyy", Locale.ENGLISH);
-			LocalDate date = LocalDate.parse(dates[iteration], formatter);
-			localDate[iteration-1] = date;
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMMyyyy", Locale.ENGLISH);
+				LocalDate date = LocalDate.parse(dates[iteration], formatter);
+				localDate[iteration-1] = date;
 			}
 			catch(DateTimeException exception) {
 				System.out.println("Invalid Date Entry");
@@ -100,65 +98,43 @@ public class HotelReservation {
 	 * @param input
 	 * @return
 	 */
-	public ArrayList<Hotel> findCheapestHotel(Scanner input) {
-		ArrayList<Hotel> cheapestHotels = this.findCheapest();
-		return cheapestHotels;
-	}
-	public ArrayList<Hotel> findCheapest() {
-		int minimumRate = 0;
-		ArrayList<Hotel> cheapestHotels = new ArrayList<Hotel>();
-		HashMap<Hotel,Integer> hotelMap = new HashMap<Hotel,Integer>();
-		HashMap<Hotel,Integer> ratingMap = new HashMap<Hotel,Integer>();
-		for(Hotel hotel : hotelList) {
-			int totalRate = hotel.getWeekDayRate() * (int)totalWeekDays + hotel.getWeekEndRate() * (int)totalWeekEndDays;
-			hotelMap.put(hotel, totalRate);
-			ratingMap.put(hotel, hotel.getHotelRatings());
-		}
-		minimumRate = Collections.min(hotelMap.values());
-		
-		for(Map.Entry<Hotel, Integer> entry : hotelMap.entrySet()) {
-			if(entry.getValue() == minimumRate) {
-				cheapestHotels.add(entry.getKey());
-			}
-		}
-		int maximumRating = Collections.max(ratingMap.values());
-		for(Hotel hotel : cheapestHotels) {
-			if(hotel.getHotelRatings() != maximumRating) {
-				cheapestHotels.remove(hotel);
-				continue;
-			}
-			System.out.println(hotel.getHotelName() + "Ratings : " + hotel.getHotelRatings() +" Total Rate : " + minimumRate);
-		}
-		return cheapestHotels;
+	public ArrayList<Hotel> findCheapestHotels() {
+		HashMap<Hotel,Integer> hotelMap = (HashMap<Hotel, Integer>)hotelList.stream().collect(Collectors.toMap(hotel -> hotel, hotel -> (int)(hotel.getWeekDayRate() * totalWeekDays + hotel.getWeekEndRate() * totalWeekEndDays)));
+		int minimumRate = hotelMap.values().stream().min(Integer :: compare).get() ;
+		ArrayList<Hotel> cheapestHotel = (ArrayList<Hotel>)hotelMap.entrySet().stream().filter(data -> data.getValue() == minimumRate).map(data -> data.getKey()).collect(Collectors.toList());
+		return cheapestHotel;
 	}
 	/**
-	 *UseCase 7
-	 *Function to find Best Rated Hotels
+	 * Finds Best Rated Hotels
+	 * @param hotels
 	 * @return
 	 */
-	public ArrayList<Hotel> findBestRatedHotels(Scanner input){
-		ArrayList<Hotel> bestRatedHotels = new ArrayList<Hotel>();
-		HashMap<Hotel,Integer> ratingMap = new HashMap<Hotel,Integer>();
-		for(Hotel hotel : hotelList) {
-			ratingMap.put(hotel, hotel.getHotelRatings());
-		}
-		int maximumRating = Collections.max(ratingMap.values());
-		for(Map.Entry<Hotel, Integer> entry : ratingMap.entrySet()) {
-			if(entry.getValue() == maximumRating) {
-				bestRatedHotels.add(entry.getKey());
-				System.out.println("Hotel Name : " + entry.getKey().getHotelName() + "Ratings : " + entry.getKey().getHotelRatings() +" Total Rate : " + ((int) totalWeekDays * entry.getKey().getWeekDayRate() + (int)totalWeekEndDays * entry.getKey().getWeekEndRate()));
-			}
-		}
-		for(Hotel hotel : bestRatedHotels) {
-			System.out.println(hotel);
-		}
-		return bestRatedHotels;	
+	public ArrayList<Hotel> findBestRatedHotels(ArrayList<Hotel> hotels) {
+		HashMap<Hotel,Integer> ratingMap = (HashMap<Hotel, Integer>)hotels.stream().collect(Collectors.toMap(hotel -> hotel, hotel -> hotel.getHotelRatings()));
+		int maximumRate = ratingMap.values().stream().max(Integer :: compare).get() ;
+		ArrayList<Hotel> bestRated = (ArrayList<Hotel>)ratingMap.entrySet().stream().filter(data -> data.getValue() == maximumRate).map(data -> data.getKey()).collect(Collectors.toList());
+		return bestRated;
+	}
+	/**
+	 * Find Cheapest Best Rated Hotels
+	 * @return
+	 */
+	public ArrayList<Hotel> findCheapestBestRatedHotels(){
+		ArrayList<Hotel> cheapestHotel = findCheapestHotels();
+		ArrayList<Hotel> bestRatedHotel = findBestRatedHotels(cheapestHotel);
+		return bestRatedHotel;
 	}
 	public static void main(String[] args) {
 		Scanner input = new Scanner(System.in);
 		System.out.println("Welcome to Hotel Reservation Program");
 		HotelReservation hotel = new HotelReservation();
-		hotel.getInput(input);
+		hotel.addHotel(input);
+		ArrayList<Hotel> cheapest = hotel.findCheapestHotels();
+		cheapest.forEach(System.out :: println);
+		ArrayList<Hotel> bestRated = hotel.findBestRatedHotels(hotel.hotelList);
+		bestRated.forEach(System.out :: println);
+		ArrayList<Hotel> cheapestBestRated = hotel.findCheapestBestRatedHotels();
+		cheapestBestRated.forEach(System.out :: println);
 		input.close();
 	}
 }
